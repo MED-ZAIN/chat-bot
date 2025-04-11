@@ -13,6 +13,7 @@ export default function Chat() {
     async function send() {
         if (!question.trim()) return;
         setLoading(true);
+        setQuestion("");
         ChatAiService.ragChat(question).then(resp => {
             setResponse(resp);
             setLoading(false);
@@ -20,6 +21,7 @@ export default function Chat() {
             setLoading(false);
         });
     }
+
 
     function handleFileClick() {
         fileInputRef.current?.click();
@@ -41,7 +43,7 @@ export default function Chat() {
         <div className="d-flex flex-column justify-content-center align-items-center min-vh-100" style={{ backgroundColor: "#1e1f22", color: "#ffffff" }}>
             <div className="text-center mb-4">
                 <h2 className="fw-bold">
-                    <span style={{ color: "#4f78ff" }}>ChatBOt</span>
+                    <span style={{ color: "#4f78ff" }}>ChatCoding</span>
                 </h2>
                 <p className="text-secondary">How can I help you today?</p>
             </div>
@@ -68,9 +70,8 @@ export default function Chat() {
                             onChange={(e) => setQuestion(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && send()}
                             disabled={loading}
-                            style={{ fontSize: "1.1rem" }}
+                            style={{ fontSize: "1.1rem", display: loading ? "none" : "block" }}
                         />
-
 
                         <input
                             type="file"
@@ -80,15 +81,14 @@ export default function Chat() {
                             onChange={handleFileChange}
                         />
 
-
                         <button
                             className="btn btn-dark border-0"
                             type="button"
                             onClick={handleFileClick}
+                            disabled={loading}
                         >
                             <FaPaperclip className="text-white" />
                         </button>
-
 
                         <button
                             className="btn btn-primary rounded-end-4"
