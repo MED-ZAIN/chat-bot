@@ -2,6 +2,7 @@ import "../styles/styles.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import { useState } from "react";
 import { FaGoogle } from "react-icons/fa";
+import { useNavigate } from "react-router";
 
 export default function Login() {
     const [isRegister, setIsRegister] = useState(false);
@@ -11,6 +12,7 @@ export default function Login() {
         password: "",
         confirmPassword: "",
     });
+    const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -20,6 +22,7 @@ export default function Login() {
         e.preventDefault();
 
         if (isRegister) {
+
             if (formData.password !== formData.confirmPassword) {
                 alert("Les mots de passe ne correspondent pas");
                 return;
@@ -40,7 +43,14 @@ export default function Login() {
 
                 if (response.ok) {
                     const data = await response.json();
-                    alert("Inscription réussie ! Bienvenue " + data.username);
+                    alert(`Bienvenue ${data.username} !`);
+
+                    // Optionnel : stocker l'utilisateur en localStorage pour maintenir la session
+                    localStorage.setItem("user", JSON.stringify(data));
+                    localStorage.setItem("loggedIn", "true");  // Marquer l'utilisateur comme connecté
+
+                    // Redirection vers la page du chat
+                    navigate("/chat");
                 } else {
                     const err = await response.text();
                     alert("Erreur d'inscription : " + err);
@@ -49,12 +59,41 @@ export default function Login() {
                 alert("Erreur réseau : " + error);
             }
         } else {
-            alert("Connexion (à implémenter)");
+            // Connexion
+            try {
+                const response = await fetch("http://localhost:8989/api/users", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                    },
+                    body: JSON.stringify({
+                        email: formData.email,
+                        password: formData.password,
+                    }),
+                });
+
+                if (response.ok) {
+                    const data = await response.json();
+                    alert(`Bienvenue ${data.username} !`);
+
+                    // Optionnel : stocker l'utilisateur en localStorage pour maintenir la session
+                    localStorage.setItem("user", JSON.stringify(data));
+                    localStorage.setItem("loggedIn", "true");  // Marquer l'utilisateur comme connecté
+
+                    // Redirection vers la page du chat
+                    navigate("/chat");
+                } else {
+                    const err = await response.text();
+                    alert("Erreur de connexion : " + err);
+                }
+            } catch (error) {
+                alert("Erreur réseau : " + error);
+            }
         }
     };
 
     const handleGoogleLogin = () => {
-        alert("Google login (à connecter à OAuth)");
+        // À implémenter pour la connexion Google
     };
 
     return (

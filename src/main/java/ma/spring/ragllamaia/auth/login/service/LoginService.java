@@ -1,5 +1,6 @@
 package ma.spring.ragllamaia.auth.login.service;
 
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import lombok.RequiredArgsConstructor;
 import ma.spring.ragllamaia.auth.login.entity.User;
 import ma.spring.ragllamaia.auth.login.repository.LoginRepository;
@@ -13,11 +14,10 @@ import java.util.Optional;
 public class LoginService {
 
     private final LoginRepository loginRepository;
+    private final BCryptPasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
     public Optional<User> authenticate(LoginRequest request) {
         return loginRepository.findByEmail(request.getEmail())
-                .filter(user -> user.getPassword().equals(request.getPassword()));
+                .filter(user -> passwordEncoder.matches(request.getPassword(), user.getPassword()));  // Comparaison avec le mot de passe haché
     }
-
-
 }
