@@ -9,7 +9,7 @@ pipeline {
     stages {
         stage('Checkout') {
             steps {
-                git 'https://github.com/MED-ZAIN/chat-bot'
+                git 'https://github.com/MED-ZAIN/chat-bot.git'
             }
         }
 
