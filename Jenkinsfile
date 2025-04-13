@@ -10,7 +10,7 @@ pipeline {
 
         stage('Build Backend') {
             steps {
-                dir('backend-springboot') {
+                dir('my-application') {
                     sh 'mvn clean install -DskipTests=false'
                 }
             }
@@ -18,7 +18,7 @@ pipeline {
 
         stage('Build Frontend') {
             steps {
-                dir('frontend-vaadin') {
+                dir('my-application') {
                     sh 'mvn clean install -DskipTests=false'
                 }
             }
