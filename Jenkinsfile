@@ -2,8 +2,8 @@ pipeline {
   agent any
 
   environment {
-    MAVEN_HOME = tool 'maven-3.9.0'
-    NODE_HOME = tool name: 'node-18', type: 'NodeJSInstallation'
+    MAVEN_HOME = tool 'maven-3.9.9'
+    NODE_HOME = tool name: 'node-22', type: 'NodeJSInstallation'
     PATH = "${NODE_HOME}/bin:${env.PATH}"
   }
 
