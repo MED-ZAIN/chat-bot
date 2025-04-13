@@ -4,7 +4,7 @@ pipeline {
   environment {
     MAVEN_HOME = tool 'maven-3.9.9'
     NODE_HOME = tool name: 'node-22', type: 'NodeJSInstallation'
-    PATH = "${NODE_HOME}/bin:${env.PATH}"
+    PATH = "${env.NODE_HOME}\\bin;${env.PATH}"
   }
 
   stages {
@@ -17,7 +17,7 @@ pipeline {
     stage('Build Backend') {
       steps {
         dir('backend') {
-          sh "${MAVEN_HOME}/bin/mvn clean install"
+          bat "\"%MAVEN_HOME%\\bin\\mvn\" clean install"
         }
       }
     }
@@ -25,7 +25,7 @@ pipeline {
     stage('Run Backend Tests') {
       steps {
         dir('backend') {
-          sh "${MAVEN_HOME}/bin/mvn test"
+          bat "\"%MAVEN_HOME%\\bin\\mvn\" test"
         }
       }
     }
@@ -33,28 +33,27 @@ pipeline {
     stage('Build Frontend') {
       steps {
         dir('frontend') {
-          sh 'npm install'
-          sh 'npm run build'
+          bat 'npm install'
+          bat 'npm run build'
         }
       }
     }
 
     stage('Archive Artefacts') {
       steps {
-        archiveArtifacts artifacts: 'backend/target/*.jar', fingerprint: true
-        archiveArtifacts artifacts: 'frontend/build/**', fingerprint: true
+        archiveArtifacts artifacts: 'backend\\target\\*.jar', fingerprint: true
+        archiveArtifacts artifacts: 'frontend\\build\\**', fingerprint: true
       }
     }
 
-    // Déploiement (optionnel)
     stage('Deploy') {
       when {
         branch 'main'
       }
       steps {
-        echo "Déploiement ici (Docker, SCP, etc.)"
-        // Exemple :
-        // sh 'scp backend/target/app.jar user@server:/opt/app/'
+        echo "Déploiement ici (Docker, copie de fichier, etc.)"
+        // Exemple Windows :
+        // bat 'copy backend\\target\\app.jar \\\\server\\deploy\\app\\'
       }
     }
   }
