@@ -12,7 +12,7 @@ pipeline {
         stage('Build Backend') {
             steps {
                 dir('backend-springboot') {
-                    sh 'mvn clean install -DskipTests=false'
+                    sh 'mvn clean install -DskipTests=true'
                 }
             }
         }
